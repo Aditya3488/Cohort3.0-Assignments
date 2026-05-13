@@ -1,0 +1,187 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body{
+    width: 100%;
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #efefef;
+    overflow-x: hidden;
+}
+
+.hero{
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    padding: 30px 40px 60px;
+}
+
+/* STAR */
+
+.star{
+    position: absolute;
+    top: 35px;
+    left: 20px;
+
+    font-size: 55px;
+    color: #7a0000;
+    font-weight: bold;
+}
+
+/* TOP RIGHT TEXT */
+
+.future-text{
+    position: absolute;
+    top: 40px;
+    right: 30px;
+
+    font-size: 10px;
+    color: #7a0000;
+    text-align: right;
+    line-height: 1.2;
+}
+
+/* MAIN CONTENT */
+
+.main-content{
+    width: 65%;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* HEADING */
+
+.heading{
+    width: 100%;
+}
+
+.heading h1{
+    font-size: 72px;
+    line-height: 0.95;
+    font-weight: 500;
+    color: #6a0000;
+    letter-spacing: -2px;
+}
+
+.light-text{
+    color: #b9a5a5;
+}
+
+.aligned-text{
+    display: inline-block;
+    margin-left: 207px;
+}
+
+/* SMALL OVAL */
+
+.circle{
+    width: 65px;
+    height: 35px;
+    display: inline-block;
+
+    border-radius: 50px;
+
+    background: linear-gradient(
+        to right,
+        #220000,
+        #ff4d00
+    );
+
+    vertical-align: middle;
+}
+
+/* PARAGRAPH */
+
+.paragraph{
+    width: 300px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    margin-left: 234px;
+}
+
+.paragraph p{
+    font-size: 12px;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* CARDS */
+
+.cards{
+    width: 100%;
+
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+}
+
+.card{
+    width: 220px;
+    height: 260px;
+
+    border-radius: 18px;
+    overflow: hidden;
+
+    flex-shrink: 0;
+}
+
+.card img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* LEFT SIDE TEXT */
+
+.side-text{
+    position: absolute;
+    left: 12px;
+    top: 62%;
+
+    transform: translateY(-50%);
+
+    font-size: 16px;
+    line-height: 1.1;
+
+    color: #7a0000;
+    text-decoration: underline;
+}
+
+/* BOTTOM SECTION */
+
+.bottom-text{
+    margin-top: 80px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+}
+
+.bottom-text h2{
+    font-size: 65px;
+    line-height: 0.95;
+    font-weight: 500;
+    color: #6a0000;
+}
+
+.bottom-text h2 span{
+    color: #b9a5a5;
+}
+
+.bottom-text p{
+    width: 420px;
+    margin-top: 15px;
+
+    font-size: 12px;
+    line-height: 1.5;
+    color: #555;
+}
