@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    font-family: system-ui, sans-serif;
+    background: #f3f3f3;
+}
+
+.header {
+    width: 95%;
+    height: 95vh;
+    margin: 20px auto;
+    border-radius: 30px;
+    overflow: hidden;
+
+    /* split background */
+    background: linear-gradient(
+        to right,
+        #f7c600 60%,
+        #f6ebc9 40%
+    );
+
+    position: relative;
+}
+
+/* NAVBAR */
+
+.navbar {
+    width: 100%;
+    padding: 25px 45px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar img {
+    width: 140px;
+}
+
+.ri-menu-line {
+    font-size: 45px;
+    cursor: pointer;
+}
+
+/* MAIN SECTION */
+
+.main-container {
+    width: 100%;
+    height: calc(100% - 100px);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 70px;
+}
+
+/* LEFT TEXT */
+
+.text-content {
+    width: 45%;
+    z-index: 2;
+}
+
+.sub-heading {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.main-heading {
+    font-size: 130px;
+    line-height: 1;
+    font-weight: 900;
+    text-transform: capitalize;
+    margin-bottom: 30px;
+}
+
+.para {
+    width: 500px;
+    font-size: 22px;
+    line-height: 1.7;
+    color: #222;
+}
+
+/* RIGHT IMAGE */
+
+.pikachu-image {
+    width: 50%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+}
+
+.pikachu-image img {
+    width: 700px;
+    object-fit: contain;
+}
+
+/* OPTIONAL decorative pokeball */
+
+.header::before {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border: 18px solid rgba(0,0,0,0.08);
+    border-radius: 50%;
+
+    bottom: -60px;
+    left: -20px;
+}
+
+/* middle line of pokeball */
+
+.header::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 18px;
+    background: rgba(0,0,0,0.08);
+
+    bottom: 40px;
+    left: -20px;
+}
