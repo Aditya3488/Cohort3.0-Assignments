@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow — DOM Task Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════════ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">TaskFlow</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span class="theme-icon">☽</span>
+        <span class="theme-label">Dark Mode</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════
+       STATS BAR
+  ══════════════════════════════════════════════ -->
+  <section class="stats-bar">
+    <div class="stat-chip" id="statTotal">
+      <span class="stat-num" id="countTotal">0</span>
+      <span class="stat-lbl">Total</span>
+    </div>
+    <div class="stat-chip pending" id="statPending">
+      <span class="stat-num" id="countPending">0</span>
+      <span class="stat-lbl">Pending</span>
+    </div>
+    <div class="stat-chip done" id="statDone">
+      <span class="stat-num" id="countDone">0</span>
+      <span class="stat-lbl">Completed</span>
+    </div>
+    <button class="btn-clear" id="clearAll">Clear All</button>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       MAIN LAYOUT
+  ══════════════════════════════════════════════ -->
+  <main class="layout">
+
+    <!-- LEFT PANEL: Form + Search + Filter -->
+    <aside class="panel-left">
+      <div class="card form-card">
+        <h2 class="card-title">New Task</h2>
+
+        <!-- Task Title -->
+        <div class="field">
+          <label for="taskTitle">Title</label>
+          <input
+            type="text"
+            id="taskTitle"
+            placeholder="What needs doing?"
+            value=""
+            autocomplete="off"
+          />
+          <!--
+            ATTRIBUTES VS PROPERTIES DEMO:
+            input.getAttribute("value") → returns the *initial* HTML attribute ("").
+            input.value                → returns the *live* DOM property (what the user typed).
+            After typing "Buy milk", getAttribute("value") still returns "" but input.value returns "Buy milk".
+            Properties reflect current state; attributes reflect what was in the source HTML.
+          -->
+        </div>
+
+        <!-- Category -->
+        <div class="field">
+          <label for="taskCategory">Category</label>
+          <select id="taskCategory">
+            <option value="work">Work</option>
+            <option value="personal">Personal</option>
+            <option value="health">Health</option>
+            <option value="learning">Learning</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" id="addTaskBtn">+ Add Task</button>
+      </div>
+
+      <!-- Search -->
+      <div class="card search-card">
+        <h2 class="card-title">Search & Filter</h2>
+        <div class="field">
+          <input type="search" id="searchInput" placeholder="Search tasks…" />
+        </div>
+        <div class="filter-row" id="filterBtns">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="work">Work</button>
+          <button class="filter-btn" data-filter="personal">Personal</button>
+          <button class="filter-btn" data-filter="health">Health</button>
+          <button class="filter-btn" data-filter="learning">Learning</button>
+          <button class="filter-btn" data-filter="other">Other</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT PANEL: Task List -->
+    <section class="panel-right">
+      <div class="tasks-header">
+        <h2 class="section-title">Tasks</h2>
+        <span class="empty-hint" id="emptyHint">No tasks yet — add one on the left ↗</span>
+      </div>
+
+      <!--
+        EVENT DELEGATION:
+        We attach ONE listener to #taskList instead of one per card.
+        Inside the handler we inspect e.target to know which button was clicked.
+        This is efficient and automatically handles dynamically added cards.
+      -->
+      <div class="task-list" id="taskList"></div>
+    </section>
+  </main>
+
+  <!-- ══════════════════════════════════════════════
+       EVENT PROPAGATION DEMO
+  ══════════════════════════════════════════════ -->
+  <section class="demo-section">
+    <div class="demo-inner">
+      <h2 class="demo-heading">Event Propagation Demo</h2>
+      <p class="demo-sub">Open DevTools console, then click the inner button to see bubbling &amp; capturing order.</p>
+
+      <div class="prop-tabs">
+        <button class="prop-tab active" id="tabBubble">Bubbling</button>
+        <button class="prop-tab" id="tabCapture">Capturing</button>
+      </div>
+
+      <!-- Bubbling demo -->
+      <div class="prop-demo" id="demoBubble">
+        <div class="gp-box" id="grandparent">
+          <span class="box-label">Grandparent</span>
+          <div class="p-box" id="parent">
+            <span class="box-label">Parent</span>
+            <button class="c-btn" id="childBtn">Child Button</button>
+          </div>
+        </div>
+        <div class="prop-log" id="bubbleLog">
+          <em>Click the Child Button…</em>
+        </div>
+      </div>
+
+      <!-- Capturing demo -->
+      <div class="prop-demo hidden" id="demoCapture">
+        <div class="gp-box" id="grandparentC">
+          <span class="box-label">Grandparent</span>
+          <div class="p-box" id="parentC">
+            <span class="box-label">Parent</span>
+            <button class="c-btn" id="childBtnC">Child Button</button>
+          </div>
+        </div>
+        <div class="prop-log" id="captureLog">
+          <em>Click the Child Button…</em>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       BROWSER RENDERING PIPELINE
+  ══════════════════════════════════════════════ -->
+  <section class="pipeline-section">
+    <div class="pipeline-inner">
+      <h2 class="demo-heading">Browser Rendering Pipeline</h2>
+      <p class="demo-sub">How your HTML &amp; CSS become pixels on screen.</p>
+
+      <div class="pipeline-grid">
+
+        <!-- HTML path -->
+        <div class="pipe-col">
+          <div class="pipe-node source html-node">
+            <span class="node-icon">⟨/⟩</span>
+            <span class="node-title">HTML Source</span>
+          </div>
+          <div class="pipe-arrow">↓</div>
+          <div class="pipe-node step">
+            <span class="node-icon">🔍</span>
+            <span class="node-title">Parsing</span>
+            <p class="node-desc">The HTML parser reads bytes and identifies meaningful units (tags, text, attributes).</p>
+          </div>
+          <div class="pipe-arrow">↓</div>
+          <div class="pipe-node step">
+            <span class="node-icon">🔤</span>
+            <span class="node-title">Tokenization</span>
+            <p class="node-desc">Raw characters are converted into typed tokens — StartTag, EndTag, Text, Comment, etc.</p>
+          </div>
+          <div class="pipe-arrow">↓</div>
+          <div class="pipe-node result dom-node">
+            <span class="node-icon">🌳</span>
+            <span class="node-title">DOM Tree</span>
+            <p class="node-desc">Tokens are assembled into a tree of Node objects that JavaScript can read and mutate.</p>
+          </div>
+        </div>
+
+        <!-- Merge column -->
+        <div class="pipe-merge-col">
+          <div class="merge-label">+</div>
+          <div class="pipe-arrow big-arrow">↓</div>
+          <div class="pipe-node result render-node">
+            <span class="node-icon">🖼</span>
+            <span class="node-title">Render Tree</span>
+            <p class="node-desc">Only visible nodes are kept. Each node carries computed styles. This tree drives Layout &amp; Paint.</p>
+          </div>
+          <div class="pipe-arrow">↓</div>
+          <div class="pipe-node step">
+            <span class="node-icon">📐</span>
+            <span class="node-title">Layout (Reflow)</span>
+            <p class="node-desc">Exact position and size of every box is calculated from the Render Tree.</p>
+          </div>
+          <div class="pipe-arrow">↓</div>
+          <div class="pipe-node step">
+            <span class="node-icon">🎨</span>
+            <span class="node-title">Paint &amp; Composite</span>
+            <p class="node-desc">Pixels are drawn in layers, then composited into the final frame sent to the screen.</p>
+          </div>
+        </div>
+
+        <!-- CSS path -->
+        <div class="pipe-col">
+          <div class="pipe-node source css-node">
+            <span class="node-icon">✦</span>
+            <span class="node-title">CSS Source</span>
+          </div>
+          <div class="pipe-arrow">↓</div>
+          <div class="pipe-node step">
+            <span class="node-icon">🔍</span>
+            <span class="node-title">Parsing</span>
+            <p class="node-desc">CSS bytes are parsed into a rule list — selectors, declarations, at-rules.</p>
+          </div>
+          <div class="pipe-arrow">↓</div>
+          <div class="pipe-node result cssom-node">
+            <span class="node-icon">🎨</span>
+            <span class="node-title">CSSOM Tree</span>
+            <p class="node-desc">Rules are organized into a style tree with specificity resolved and values inherited.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       ATTR VS PROPERTY EXPLAINER
+  ══════════════════════════════════════════════ -->
+  <section class="attr-section">
+    <div class="attr-inner">
+      <h2 class="demo-heading">Attributes vs Properties</h2>
+      <p class="demo-sub">Type in the box below and watch the difference live.</p>
+      <div class="attr-demo-row">
+        <input type="text" id="attrDemo" class="attr-input" value="initial" placeholder="Type here…" />
+        <div class="attr-results">
+          <div class="attr-row">
+            <span class="attr-key">getAttribute("value")</span>
+            <span class="attr-val" id="attrResult">initial</span>
+          </div>
+          <div class="attr-row">
+            <span class="attr-key">input.value (property)</span>
+            <span class="attr-val property" id="propResult">initial</span>
+          </div>
+        </div>
+      </div>
+      <p class="attr-note">
+        <strong>Key insight:</strong> <code>getAttribute("value")</code> always returns the <em>initial</em> HTML attribute — it never changes unless you call <code>setAttribute()</code>. <code>input.value</code> is a live DOM property that reflects what the user typed. Attributes are in the HTML; properties are in the DOM object.
+      </p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>TaskFlow — Built with vanilla DOM APIs · No frameworks · Pure HTML/CSS/JS</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
