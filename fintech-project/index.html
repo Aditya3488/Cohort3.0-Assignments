@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinTrack Pro - Personal Finance Tracker</title>
+
+  <!-- Google font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- my css file -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- ===================== LOGIN / REGISTER PAGE ===================== -->
+  <div id="authPage" class="auth-wrapper">
+    <div class="auth-box">
+      <h2 class="auth-title">💰 FinTrack Pro</h2>
+      <p class="auth-subtitle">Track your money, your way.</p>
+
+      <div class="auth-tabs">
+        <button id="loginTabBtn" class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+        <button id="registerTabBtn" class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="loginForm">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com">
+
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter your password">
+
+        <p id="loginError" class="form-error hidden">Invalid email or password.</p>
+
+        <button class="btn btn-primary full-width" onclick="loginUser()">Login</button>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="registerForm" class="hidden">
+        <label for="registerName">Full Name</label>
+        <input type="text" id="registerName" placeholder="Your name">
+
+        <label for="registerEmail">Email</label>
+        <input type="email" id="registerEmail" placeholder="you@example.com">
+
+        <label for="registerPassword">Password</label>
+        <input type="password" id="registerPassword" placeholder="Create a password">
+
+        <label for="registerConfirm">Confirm Password</label>
+        <input type="password" id="registerConfirm" placeholder="Re-enter password">
+
+        <p id="registerError" class="form-error hidden">Please check your details.</p>
+
+        <button class="btn btn-primary full-width" onclick="registerUser()">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!--PORTAL (everything after login) -->
+  <div id="portal" class="hidden">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-logo">💰 FinTrack Pro</div>
+
+    <div class="nav-links">
+      <a href="#" class="nav-link active" onclick="showPage('dashboard'); return false;">Dashboard</a>
+      <a href="#" class="nav-link" onclick="showPage('settings'); return false;">Settings</a>
+    </div>
+
+    <div class="nav-actions">
+      <span id="welcomeText" class="welcome-text"></span>
+      <button class="btn btn-primary" onclick="openModal()">+ Add Transaction</button>
+      <button class="btn btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- DASHBOARD PAGE  -->
+  <section id="dashboard" class="page">
+
+    <!-- summary cards -->
+    <div class="cards-grid">
+      <div class="card">
+        <p class="card-label">Current Balance</p>
+        <h2 id="balanceValue" class="card-value balance">₹0.00</h2>
+      </div>
+      <div class="card">
+        <p class="card-label">Total Income</p>
+        <h2 id="incomeValue" class="card-value income">₹0.00</h2>
+      </div>
+      <div class="card">
+        <p class="card-label">Total Expense</p>
+        <h2 id="expenseValue" class="card-value expense">₹0.00</h2>
+      </div>
+      <div class="card">
+        <p class="card-label">Total Transactions</p>
+        <h2 id="countValue" class="card-value">0</h2>
+      </div>
+    </div>
+
+    <!-- chart -->
+    <div class="chart-box">
+      <h3>Cash Flow</h3>
+      <canvas id="cashFlowChart" height="90"></canvas>
+    </div>
+
+    <!-- transaction table -->
+    <div class="table-box">
+      <div class="table-top">
+        <h3>Transactions</h3>
+        <div class="filter-buttons">
+          <button class="filter-btn active" onclick="filterTransactions('all', this)">All Types</button>
+          <button class="filter-btn" onclick="filterTransactions('income', this)">Income Only</button>
+          <button class="filter-btn" onclick="filterTransactions('expense', this)">Expense Only</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="transactionTableBody">
+          <!-- rows get added here by js -->
+        </tbody>
+      </table>
+
+      <p id="emptyMsg" class="empty-msg">No transactions yet. Click "Add Transaction" to get started!</p>
+    </div>
+
+  </section>
+
+  <!-- SETTINGS PAGE -->
+  <section id="settings" class="page hidden">
+    <div class="settings-box">
+      <h3>Profile Settings</h3>
+
+      <label for="displayName">Display Name</label>
+      <input type="text" id="displayName" placeholder="Enter your name">
+
+      <label for="currencySelect">Preferred Currency</label>
+      <select id="currencySelect">
+        <option value="INR">₹ INR - Indian Rupee</option>
+        <option value="USD">$ USD - US Dollar</option>
+        <option value="EUR">€ EUR - Euro</option>
+        <option value="GBP">£ GBP - British Pound</option>
+        <option value="JPY">¥ JPY - Japanese Yen</option>
+      </select>
+
+      <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+
+      <div class="toggle-row">
+        <span>Dark Mode</span>
+        <label class="switch">
+          <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <hr>
+
+      <h3 class="danger-title">Danger Zone</h3>
+      <p class="danger-text">This will permanently delete all your transactions and settings.</p>
+      <button class="btn btn-danger" onclick="resetAllData()">Reset All Data</button>
+    </div>
+  </section>
+
+  <!-- ADD TRANSACTION MODAL -->
+  <div id="transactionModal" class="modal-overlay hidden" onclick="closeModalOutside(event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Add Transaction</h3>
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+      </div>
+
+      <label for="typeInput">Type</label>
+      <select id="typeInput">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+
+      <label for="descInput">Description</label>
+      <input type="text" id="descInput" placeholder="e.g. Grocery shopping">
+
+      <label for="amountInput">Amount</label>
+      <input type="number" id="amountInput" placeholder="0.00">
+
+      <label for="dateInput">Date</label>
+      <input type="date" id="dateInput">
+
+      <label for="categoryInput">Category</label>
+      <select id="categoryInput">
+        <option value="Food & Dining">Food & Dining</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Recharge & Bills">Recharge & Bills</option>
+        <option value="Petrol & Auto">Petrol & Auto</option>
+        <option value="Utilities">Utilities</option>
+        <option value="Salary">Salary</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <p id="formError" class="form-error hidden">Please fill in all fields.</p>
+
+      <button class="btn btn-primary full-width" onclick="addTransaction()">Save Transaction</button>
+    </div>
+  </div>
+
+  </div> <!-- end of #portal -->
+
+  <!-- chart.js from cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- my js file -->
+  <script src="./script.js"></script>
+</body>
+</html>
