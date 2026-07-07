@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daybook — Productivity Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
+
+<header class="backdrop" id="backdrop">
+  <div class="topbar">
+    <div class="brand">
+      <span class="mark">Daybook</span>
+      <span class="tag">Daily Dashboard</span>
+    </div>
+    <div class="top-controls">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle light and dark theme" title="Toggle theme">◐</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-greeting">
+      <p class="eyebrow" id="dayPhaseLabel">Morning</p>
+      <h1 id="greeting">Good morning. <em>Ready to focus?</em></h1>
+    </div>
+    <div class="day-arc">
+      <div class="track"><div class="marker" id="dayMarker" style="left:0%"></div></div>
+      <div class="labels"><span>Dawn</span><span>Noon</span><span>Dusk</span><span>Midnight</span></div>
+    </div>
+  </div>
+
+  <div class="widgets-row">
+    <div class="mini-widget">
+      <div class="label">Date</div>
+      <div class="value" id="dateValue">—</div>
+      <div class="sub" id="timeValue">—</div>
+    </div>
+    <div class="mini-widget">
+      <div class="label" id="weatherLabel">Weather</div>
+      <div class="value" id="weatherMini">—</div>
+      <div class="sub" id="weatherMiniSub">Fetching location…</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Dashboard grid -->
+  <section id="dashboard">
+    <p class="section-label">Your tools</p>
+    <div class="grid">
+      <button class="card" data-feature="todo">
+        <span class="glyph">✓</span>
+        <h3>Todo List</h3>
+        <p>Capture tasks, flag what matters, check things off.</p>
+        <span class="stat" id="todoStat">0 open</span>
+      </button>
+      <button class="card" data-feature="planner">
+        <span class="glyph">🗓</span>
+        <h3>Daily Planner</h3>
+        <p>Assign notes to hourly slots across your day.</p>
+        <span class="stat" id="plannerStat">0 filled</span>
+      </button>
+      <button class="card" data-feature="goals">
+        <span class="glyph">◎</span>
+        <h3>Daily Goals</h3>
+        <p>Set a short list of wins for today and track them.</p>
+        <span class="stat" id="goalsStat">0 of 0</span>
+      </button>
+      <button class="card" data-feature="pomodoro">
+        <span class="glyph">◷</span>
+        <h3>Pomodoro Timer</h3>
+        <p>Work in focused sprints with built-in breaks.</p>
+        <span class="stat" id="pomoStat">25:00</span>
+      </button>
+      <button class="card" data-feature="motivation">
+        <span class="glyph">✦</span>
+        <h3>Motivation</h3>
+        <p>A fresh quote whenever you need a nudge.</p>
+        <span class="stat">Tap for one</span>
+      </button>
+      <button class="card" data-feature="weather">
+        <span class="glyph">☁</span>
+        <h3>Weather</h3>
+        <p>Current conditions wherever you're working from.</p>
+        <span class="stat" id="weatherStat">—</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Feature: Todo -->
+  <section class="feature-view" id="feature-todo">
+    <div class="feature-head">
+      <h2>Todo List</h2>
+      <button class="back-btn" data-back>← Dashboard</button>
+    </div>
+    <div class="input-row">
+      <input type="text" id="todoInput" placeholder="Add a task and press Enter…" maxlength="140">
+      <button class="btn" id="todoAddBtn">Add Task</button>
+    </div>
+    <ul class="list" id="todoList"></ul>
+  </section>
+
+  <!-- Feature: Planner -->
+  <section class="feature-view" id="feature-planner">
+    <div class="feature-head">
+      <h2>Daily Planner</h2>
+      <button class="back-btn" data-back>← Dashboard</button>
+    </div>
+    <div class="planner-list" id="plannerList"></div>
+  </section>
+
+  <!-- Feature: Goals -->
+  <section class="feature-view" id="feature-goals">
+    <div class="feature-head">
+      <h2>Daily Goals</h2>
+      <button class="back-btn" data-back>← Dashboard</button>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="goalsFill"></div></div>
+      <div class="progress-label" id="goalsProgressLabel">0 of 0 completed</div>
+    </div>
+    <div class="input-row">
+      <input type="text" id="goalInput" placeholder="Add a goal for today and press Enter…" maxlength="120">
+      <button class="btn" id="goalAddBtn">Add Goal</button>
+    </div>
+    <ul class="list" id="goalsList"></ul>
+  </section>
+
+  <!-- Feature: Pomodoro -->
+  <section class="feature-view" id="feature-pomodoro">
+    <div class="feature-head">
+      <h2>Pomodoro Timer</h2>
+      <button class="back-btn" data-back>← Dashboard</button>
+    </div>
+    <div class="pomo-wrap">
+      <div class="pomo-session" id="pomoSessionLabel">Work Session</div>
+      <div class="pomo-time" id="pomoTime">25:00</div>
+      <div class="pomo-controls">
+        <button class="btn" id="pomoStart">Start</button>
+        <button class="btn ghost" id="pomoPause">Pause</button>
+        <button class="btn ghost" id="pomoReset">Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature: Motivation -->
+  <section class="feature-view" id="feature-motivation">
+    <div class="feature-head">
+      <h2>Motivation</h2>
+      <button class="back-btn" data-back>← Dashboard</button>
+    </div>
+    <div class="quote-card">
+      <p class="quote-text" id="quoteText">Click below for a spark of motivation.</p>
+      <p class="quote-author" id="quoteAuthor"></p>
+      <div class="quote-actions">
+        <button class="btn" id="quoteBtn">New Quote</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature: Weather -->
+  <section class="feature-view" id="feature-weather">
+    <div class="feature-head">
+      <h2>Weather</h2>
+      <button class="back-btn" data-back>← Dashboard</button>
+    </div>
+    <div class="weather-wrap" id="weatherFull">
+      <div>
+        <div class="weather-temp" id="weatherTempFull">—</div>
+        <div class="weather-cond" id="weatherCondFull">Fetching conditions…</div>
+      </div>
+      <div class="weather-details">
+        <div><span class="k">Location</span><span id="weatherLoc">—</span></div>
+        <div><span class="k">Humidity</span><span id="weatherHumidity">—</span></div>
+        <div><span class="k">Wind</span><span id="weatherWind">—</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>Daybook — a single-page productivity dashboard. Data is saved to this browser only.</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
