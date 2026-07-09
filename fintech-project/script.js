@@ -1,3 +1,8 @@
+// ============================================
+// FinTrack Pro - script.js
+// All the app logic lives here
+// ============================================
+
 // keep track of which filter is currently active
 let currentFilter = "all";
 
@@ -6,6 +11,9 @@ let cashFlowChart = null;
 
 // email of whoever is currently logged in - blank until they log in
 let currentUserEmail = "";
+
+// holds the id of the transaction being edited, or null when adding a new one
+let editingId = null;
 
 // currency symbols for each currency code
 const currencySymbols = {
@@ -109,12 +117,53 @@ function showPage(pageName) {
 // ============================================
 
 function openModal() {
+  editingId = null; // null means we are adding a new transaction, not editing one
+
+  document.getElementById("modalTitle").innerText = "Add Transaction";
+  document.getElementById("modalSaveBtn").innerText = "Save Transaction";
+
+  // clear the form fields and set today's date
+  document.getElementById("typeInput").value = "income";
+  document.getElementById("descInput").value = "";
+  document.getElementById("amountInput").value = "";
+  document.getElementById("categoryInput").value = "Food & Dining";
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("dateInput").value = today;
+
+  document.getElementById("formError").classList.add("hidden");
+  document.getElementById("transactionModal").classList.remove("hidden");
+}
+
+function openEditModal(id) {
+  const transactions = loadTransactions();
+  const transaction = transactions.find(function (t) {
+    return t.id === id;
+  });
+
+  if (!transaction) {
+    return;
+  }
+
+  editingId = id; // remember which transaction we're editing
+
+  document.getElementById("modalTitle").innerText = "Edit Transaction";
+  document.getElementById("modalSaveBtn").innerText = "Update Transaction";
+
+  // fill the form with the existing transaction's values
+  document.getElementById("typeInput").value = transaction.type;
+  document.getElementById("descInput").value = transaction.description;
+  document.getElementById("amountInput").value = transaction.amount;
+  document.getElementById("dateInput").value = transaction.date;
+  document.getElementById("categoryInput").value = transaction.category;
+
+  document.getElementById("formError").classList.add("hidden");
   document.getElementById("transactionModal").classList.remove("hidden");
 }
 
 function closeModal() {
   document.getElementById("transactionModal").classList.add("hidden");
   document.getElementById("formError").classList.add("hidden");
+  editingId = null;
 
   // clear the form fields
   document.getElementById("descInput").value = "";
@@ -133,7 +182,7 @@ function closeModalOutside(event) {
 // ADD / DELETE TRANSACTIONS
 // ============================================
 
-function addTransaction() {
+function saveTransaction() {
   const type = document.getElementById("typeInput").value;
   const description = document.getElementById("descInput").value.trim();
   const amount = document.getElementById("amountInput").value;
@@ -146,19 +195,37 @@ function addTransaction() {
     return;
   }
 
-  const newTransaction = {
-    id: Date.now(), // timestamp works fine as a unique id for this
-    type: type,
-    description: description,
-    amount: parseFloat(amount),
-    date: date,
-    category: category
-  };
-
   const transactions = loadTransactions();
-  transactions.push(newTransaction);
+
+  if (editingId === null) {
+    // ---- ADD MODE ----
+    const newTransaction = {
+      id: Date.now(), // timestamp works fine as a unique id for this
+      type: type,
+      description: description,
+      amount: parseFloat(amount),
+      date: date,
+      category: category
+    };
+    transactions.push(newTransaction);
+  } else {
+    // ---- EDIT MODE ----
+    // find the transaction with the matching id and update its values
+    for (let i = 0; i < transactions.length; i++) {
+      if (transactions[i].id === editingId) {
+        transactions[i].type = type;
+        transactions[i].description = description;
+        transactions[i].amount = parseFloat(amount);
+        transactions[i].date = date;
+        transactions[i].category = category;
+        break;
+      }
+    }
+  }
+
   saveTransactions(transactions);
 
+  editingId = null;
   closeModal();
   refreshEverything();
 }
@@ -273,7 +340,10 @@ function renderTable() {
       "<td>" + t.description + "</td>" +
       "<td>" + t.category + "</td>" +
       "<td class='" + amountClass + "'>" + amountSign + formatMoney(t.amount) + "</td>" +
-      "<td><button class='delete-btn' onclick='deleteTransaction(" + t.id + ")'>Delete</button></td>";
+      "<td class='action-cell'>" +
+      "<button class='edit-btn' onclick='openEditModal(" + t.id + ")'>Edit</button>" +
+      "<button class='delete-btn' onclick='deleteTransaction(" + t.id + ")'>Delete</button>" +
+      "</td>";
 
     tableBody.appendChild(row);
   }
