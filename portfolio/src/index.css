@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme {
+  /* Design tokens — this is where your portfolio's identity lives.
+     Change these 6 values and the whole site's personality shifts. */
+  --color-ink: #0e0e10;
+  --color-paper: #f5f3ee;
+  --color-accent: #ff4d2e;
+  --color-muted: #ffffff;
+  --color-line: #26262a;
+
+  --font-display: "Neue Montreal", "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+html {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+
+body {
+  overscroll-behavior: none;
+}
+
+/* Lenis requires this — without it, GSAP ScrollTrigger and native
+   scroll fight each other and your animations desync from scroll position. */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+.typing-cursor {
+  display: inline-block;
+  color: var(--color-accent);
+  animation: blink 0.9s step-end infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+/* Chrome autofill apna khud ka white/yellow background force karta hai —
+   ye trick usse override karke transparent rakhta hai, dark theme ke
+   saath match karne ke liye. */
+input:-webkit-autofill,
+textarea:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #161618 inset !important;
+  -webkit-text-fill-color: var(--color-paper) !important;
+  caret-color: var(--color-paper);
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+  width: max-content;
+}
