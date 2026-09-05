@@ -21,7 +21,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc -p tsconfig.lib.json",
-    "preview": "vite preview"
+    "build:site": "vite build --config vite.config.site.ts",
+    "preview": "vite preview",
+    "preview:site": "vite preview --config vite.config.site.ts"
   },
   "peerDependencies": {
     "react": ">=18",
