@@ -49,12 +49,12 @@ export const experience = [
   {
     company: 'Hashtag Eyewears',
     role: 'Web Developer',
-    period: 'Feb 2024 — Present',
+    period: 'Feb 2025 — Present',
     location: 'On-site',
     current: true,
     logo: hashtagLogo,
     points: [
-      'Redesigned Shopify PDP/PLP pages, increasing conversion rate from 1.6% to 2.4%.',
+      'Redesigned Shopify PDP/PLP pages, increasing conversion rate from 1.6% to 4.75%.',
       'Improved Core Web Vitals — moved LCP, CLS, and INP from Fail to Pass.',
       'Boosted average mobile session duration from ~15s to ~2 minutes.',
       'Optimized Liquid templates and reduced render-blocking resources for faster loads and better SEO.',
