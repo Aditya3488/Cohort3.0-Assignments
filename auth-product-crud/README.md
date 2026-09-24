@@ -119,5 +119,5 @@ Generic error messages on login failure (no user enumeration)
 All inputs validated with express-validator (field-level 400 errors)
 Route param (:id) validated as a valid MongoDB ObjectId before querying
 Live Links
-Frontend: (add after deployment)
-Backend API: (add after deployment)
+Frontend: https://cohort3-0-assignments-d85p.vercel.app
+Backend API: https://auth-product-crud-backend.onrender.com
